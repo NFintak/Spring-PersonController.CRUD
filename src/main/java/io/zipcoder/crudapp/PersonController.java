@@ -2,9 +2,9 @@ package io.zipcoder.crudapp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import io.zipcoder.crudapp.Person;
+//import io.zipcoder.crudapp.Person;
 
-import java.util.List;
+//import java.util.List;
 
 @RestController
 @RequestMapping("/people")
@@ -19,7 +19,7 @@ public class PersonController {
     }
 
     @GetMapping("/{id}")
-    public Person getPerson(int id) {
+    public Person getPerson(@PathVariable int id) {
         return personRepo.findOne(id);
     }
 
