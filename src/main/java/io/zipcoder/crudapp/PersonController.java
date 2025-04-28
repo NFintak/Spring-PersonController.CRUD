@@ -13,28 +13,30 @@ public class PersonController {
     @Autowired
     public PersonRepo personRepo;
 
-    Person createPerson(Person p) {
+    @PostMapping
+    public Person createPerson(@RequestBody Person p) {
         return personRepo.save(p);
     }
 
-    @RequestMapping("/{id}")
-    Person getPerson(int id) {
+    @GetMapping("/{id}")
+    public Person getPerson(int id) {
         return personRepo.findOne(id);
     }
 
-    Iterable<Person> getPersonList() {
+    @GetMapping
+    public Iterable<Person> getPersonList() {
         return personRepo.findAll();
     }
 
-//    @RequestMapping("/{id}")
-//    Person updatePerson(Person p) {
-//        for (Person person : personRepo.findAll()) {
-//            if (person.getId() == p.getId()) {
-//                person = p;
-//            }
-//        }
-//        return p;
-//    }
+    @PostMapping("/{id}")
+    public Person updatePerson(@RequestBody Person p) {
+        return personRepo.save(p);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePerson(@PathVariable int id) {
+        personRepo.delete(id);
+    }
 
 
 }

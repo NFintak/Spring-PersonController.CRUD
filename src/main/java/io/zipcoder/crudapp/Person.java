@@ -13,11 +13,15 @@ public class Person {
     private int id;
 
     private String firstName;
-
     private String lastName;
 
     public Person() {
         this.firstName = "";
+        this.lastName = "";
+    }
+
+    public Person(String firstName) {
+        this.firstName = firstName;
         this.lastName = "";
     }
 
