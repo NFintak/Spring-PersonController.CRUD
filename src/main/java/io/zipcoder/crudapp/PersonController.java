@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 //import io.zipcoder.crudapp.Person;
@@ -26,16 +28,13 @@ public class PersonController {
 //        return personRepo.save(p);
 //    }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> create(@RequestBody Person person) {
-        LOG.info("creating new person {}", person);
-        if (personRepo.exists(person.getId())) {
-            LOG.info("person with id {} already exists", person.getId());
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
-        personRepo.save(person);
-
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+        Person createdPerson = new Person(person.getFirstName(), person.getLastName());
+        personRepo.save(createdPerson);
+        return new ResponseEntity<Person>(createdPerson, HttpStatus.CREATED);
     }
 
 //    @GetMapping("/{id}")
@@ -43,12 +42,12 @@ public class PersonController {
 //        return personRepo.findOne(id);
 //    }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Person> getById(@PathVariable int id) {
-        LOG.info("Getting by id");
         Person personById = personRepo.findOne(id);
         if (personById == null) {
-            LOG.info("person with id not found");
             return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Person>(personById, HttpStatus.OK);
@@ -59,12 +58,12 @@ public class PersonController {
 //        return personRepo.findAll();
 //    }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Iterable<Person>> getAll() {
-        LOG.info("Getting person list");
         Iterable<Person> people = personRepo.findAll();
         if (people == null) {
-            LOG.info("empty repo");
             return new ResponseEntity<Iterable<Person>>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<Iterable<Person>>(people, HttpStatus.OK);
@@ -75,13 +74,12 @@ public class PersonController {
 //        return personRepo.save(p);
 //    }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Person> updateById(@PathVariable("id") int id, @RequestBody Person person) {
-        LOG.info("updating person - {}", person);
         Person current = personRepo.findOne(id);
 
         if (current == null) {
-            LOG.info("person with id {} not found", id);
             return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
         }
         current.setId(person.getId());
@@ -97,13 +95,13 @@ public class PersonController {
 //        personRepo.delete(id);
 //    }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
-        LOG.info("deleting person with id - {}", id);
         Person person = personRepo.findOne(id);
 
         if (person == null) {
-            LOG.info("unable to delete, person with id {} not found", id);
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
 
