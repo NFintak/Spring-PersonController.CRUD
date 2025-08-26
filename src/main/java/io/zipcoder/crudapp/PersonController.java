@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-//import io.zipcoder.crudapp.Person;
-
-//import java.util.List;
+import io.zipcoder.crudapp.Person;
 
 @RestController
 @RequestMapping("/people")
@@ -23,89 +21,62 @@ public class PersonController {
     @Autowired
     public PersonRepo personRepo;
 
-//    @PostMapping
-//    public Person createPerson(@RequestBody Person p) {
-//        return personRepo.save(p);
-//    }
-
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
-        Person createdPerson = new Person(person.getFirstName(), person.getLastName());
-        personRepo.save(createdPerson);
-        return new ResponseEntity<Person>(createdPerson, HttpStatus.CREATED);
+    public ResponseEntity<Person> createPerson(@RequestBody Person p) {
+        Person created = new Person(p.getFirstName(), p.getLastName());
+        personRepo.save(created);
+        return new ResponseEntity<Person>(created, HttpStatus.OK);
     }
-
-//    @GetMapping("/{id}")
-//    public Person getPerson(@PathVariable int id) {
-//        return personRepo.findOne(id);
-//    }
 
     @GetMapping("/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Person> getById(@PathVariable int id) {
-        Person personById = personRepo.findOne(id);
-        if (personById == null) {
+    public ResponseEntity<Person> getPerson(@PathVariable Integer id) {
+        Person byId = personRepo.findOne(id);
+        if (byId == null) {
             return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Person>(personById, HttpStatus.OK);
+        return new ResponseEntity<Person>(byId, HttpStatus.OK);
     }
-
-//    @GetMapping
-//    public Iterable<Person> getPersonList() {
-//        return personRepo.findAll();
-//    }
 
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Iterable<Person>> getAll() {
+    public ResponseEntity<Iterable<Person>> getPersonList() {
         Iterable<Person> people = personRepo.findAll();
         if (people == null) {
-            return new ResponseEntity<Iterable<Person>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<Iterable<Person>>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Iterable<Person>>(people, HttpStatus.OK);
     }
 
-//    @PostMapping("/{id}")
-//    public Person updatePerson(@RequestBody Person p) {
-//        return personRepo.save(p);
-//    }
-
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Person> updateById(@PathVariable("id") int id, @RequestBody Person person) {
-        Person current = personRepo.findOne(id);
-
-        if (current == null) {
+    public ResponseEntity<Person> updatePerson(@PathVariable("id") Integer id, @RequestBody Person p) {
+        Person updated = personRepo.findOne(id);
+        if (updated == null) {
             return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
         }
-        current.setId(person.getId());
-        current.setFirstName(person.getFirstName());
-        current.setLastName(person.getLastName());
+        updated.setId(p.getId());
+        updated.setFirstName(p.getFirstName());
+        updated.setLastName(p.getLastName());
 
-        personRepo.save(current);
-        return new ResponseEntity<Person>(current, HttpStatus.OK);
+        personRepo.save(updated);
+        return new ResponseEntity<Person>(updated, HttpStatus.OK);
     }
-
-//    @DeleteMapping("/{id}")
-//    public void deletePerson(@PathVariable int id) {
-//        personRepo.delete(id);
-//    }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
-        Person person = personRepo.findOne(id);
-
-        if (person == null) {
+    public ResponseEntity<Void> deletePerson(@PathVariable("id") Integer id) {
+        Person toDelete = personRepo.findOne(id);
+        if (toDelete == null) {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
 
-        personRepo.delete(person);
+        personRepo.delete(toDelete);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 

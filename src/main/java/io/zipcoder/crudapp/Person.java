@@ -3,12 +3,11 @@ package io.zipcoder.crudapp;
 import javax.persistence.*;
 
 @Entity
-//@Table(name = "person")
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     private String firstName;
     private String lastName;
@@ -28,27 +27,28 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Integer getId() {
+        return id;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public String getLastName() {
+        return lastName;
+    }
+
 }
